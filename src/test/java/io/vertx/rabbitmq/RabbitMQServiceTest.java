@@ -3,7 +3,6 @@ package io.vertx.rabbitmq;
 import com.rabbitmq.client.AMQP;
 import io.vertx.core.Handler;
 import io.vertx.core.json.JsonObject;
-import org.junit.Ignore;
 import org.junit.Test;
 
 import java.io.IOException;
@@ -194,7 +193,6 @@ public class RabbitMQServiceTest extends RabbitMQClientTestBase {
   }
 
   @Test
-  @Ignore
   public void testBasicConsumeWithErrorHandler() throws Exception {
     int count = 3;
     Set<String> messages = createMessages(count);
@@ -206,7 +204,7 @@ public class RabbitMQServiceTest extends RabbitMQClientTestBase {
 
     Handler<Throwable> errorHandler = throwable -> latch.countDown();
 
-//    client.basicConsume(q, "my.address", true, onSuccess(v -> {}), errorHandler);
+    client.basicConsume(q, "my.address", true, onSuccess(v -> {}), errorHandler);
 
     awaitLatch(latch);
     testComplete();
