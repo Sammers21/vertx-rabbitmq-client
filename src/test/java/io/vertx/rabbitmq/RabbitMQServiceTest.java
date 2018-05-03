@@ -329,34 +329,6 @@ public class RabbitMQServiceTest extends RabbitMQClientTestBase {
     testComplete();
   }
 
-  @Test
-  public void testBasicConsumerNoAutoAck(TestContext context) throws Exception {
-
-    int count = 3;
-    Set<String> messages = createMessages(count);
-    String q = setupQueue(messages);
-
-    Async latch = context.async(count);
-
-    client.basicConsumer(q, new QueueOptions().setAutoAck(false), consumerHandler -> {
-      if (consumerHandler.succeeded()) {
-        log.info("Consumer started successfully");
-        RabbitMQConsumer result = consumerHandler.result();
-        result.exceptionHandler(e -> {
-          log.error(e);
-          context.fail();
-        });
-        result.handler(msg -> handleUnAckDelivery(messages, latch, msg));
-      } else {
-        context.fail();
-      }
-    });
-
-    latch.await();
-    //assert all messages should be consumed.
-    assertTrue(messages.isEmpty());
-  }
-
   private void handleUnAckDelivery(Set<String> messages, CountDownLatch latch, JsonObject json) {
     String body = json.getString("body");
     assertTrue(messages.contains(body));
