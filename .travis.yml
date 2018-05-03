@@ -11,4 +11,7 @@ before_install:
 
 script:
   - set -e
-  - mvn clean verify -Prabbitmq.local
+  - mvn clean verify -Prabbitmq.local,coverage
+
+after_success:
+  - bash <(curl -s https://codecov.io/bash)
